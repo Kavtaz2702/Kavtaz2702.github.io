@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3efe4;
+    --panel: #ebe6d8;
+    --ink: #1b1a17;
+    --muted: #6f6a5d;
+    --line: #1b1a17;
+    --soft: #cfc8b4;
+    --grid: rgba(27, 26, 23, .055);
+    --accent: #d9480f;
+  }
+  :root[data-theme="crt"] {
+    --paper: #0a0e0a;
+    --panel: #0f150f;
+    --ink: #b9f5b2;
+    --muted: #6aa266;
+    --line: #2f5a2d;
+    --soft: #1d341c;
+    --grid: rgba(120, 220, 110, .06);
+    --accent: #ffb000;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: var(--ink);
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.65;
+    transition: background-color .3s, color .3s;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .px { font-family: "VT323", "IBM Plex Mono", monospace; font-weight: 400; }
+
+  /* top bar */
+  nav { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 54px; gap: 12px; }
+  .logo { font-size: 26px; text-decoration: none; }
+  .links { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+  .links a { text-decoration: none; }
+  .links a:hover { color: var(--accent); }
+  #theme {
+    font: inherit; font-size: 12px; color: var(--ink); background: transparent;
+    border: 1px solid var(--line); padding: 3px 10px; cursor: pointer;
+  }
+  #theme:hover { background: var(--ink); color: var(--paper); }
+
+  /* hero */
+  header { padding: 64px 0 40px; }
+  .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: center; }
+  .status { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .led { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s infinite; flex: none; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  h1 { font-size: clamp(52px, 9vw, 88px); line-height: .9; margin: 14px 0 10px; letter-spacing: 1px; }
+  .role { font-size: 17px; font-weight: 500; }
+  .pitch { color: var(--muted); margin-top: 12px; max-width: 470px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .btn {
+    display: inline-block; text-decoration: none; font-size: 14px; font-weight: 500;
+    padding: 10px 18px; border: 1px solid var(--line); background: var(--paper);
+    box-shadow: 4px 4px 0 var(--line); transition: transform .1s, box-shadow .1s;
+  }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--line); }
+  .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  :root[data-theme="crt"] .btn.primary { color: #0a0e0a; }
+
+  .scope { border: 1px solid var(--line); background: var(--panel); box-shadow: 6px 6px 0 var(--line); }
+  .scope-bar { display: flex; justify-content: space-between; font-size: 11px; padding: 5px 10px; border-bottom: 1px solid var(--line); letter-spacing: 1px; }
+  .scope canvas { display: block; width: 100%; height: 230px; }
+  .scope-foot { display: flex; justify-content: space-between; font-size: 11px; padding: 5px 10px; border-top: 1px solid var(--line); color: var(--muted); }
+
+  /* headline numbers */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); background: var(--paper); margin-top: 48px; }
+  .stat { padding: 14px 16px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat b { display: block; font-size: 44px; line-height: 1; color: var(--accent); font-weight: 400; }
+  .stat span { font-size: 12.5px; color: var(--muted); display: block; margin-top: 4px; line-height: 1.4; }
+
+  /* sections */
+  section { padding: 52px 0; }
+  .trace { display: block; width: 100%; height: 22px; color: var(--line); }
+  .head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; }
+  .head .num { font-size: 30px; color: var(--accent); }
+  h2 { font-size: 44px; line-height: 1; letter-spacing: 1px; }
+  .lead { max-width: 660px; }
+
+  /* spec table */
+  table { width: 100%; border-collapse: collapse; margin-top: 24px; background: var(--paper); }
+  th, td { text-align: left; padding: 9px 12px; border: 1px solid var(--soft); vertical-align: top; }
+  th { width: 190px; font-weight: 500; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+
+  /* projects */
+  .proj { border: 1px solid var(--line); background: var(--paper); margin-bottom: 22px; transition: box-shadow .15s, transform .15s; }
+  .proj:hover { box-shadow: 6px 6px 0 var(--line); transform: translate(-2px, -2px); }
+  .proj-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--panel); font-size: 12px; letter-spacing: 1px; }
+  .proj-top a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .proj-top a:hover { text-decoration: underline; }
+  .proj img { display: block; width: 100%; max-height: 360px; object-fit: cover; border-bottom: 1px solid var(--line); }
+  .proj-body { padding: 18px 14px 16px; }
+  .proj h3 { font-size: 30px; line-height: 1.05; font-weight: 400; }
+  .proj .sum { color: var(--muted); margin: 6px 0 14px; max-width: 660px; }
+  .cols { display: grid; grid-template-columns: 1fr 1.5fr 1.2fr; border: 1px solid var(--soft); }
+  .cols div { padding: 10px 12px; border-right: 1px solid var(--soft); font-size: 14px; }
+  .cols div:last-child { border-right: 0; }
+  .cols b { display: block; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chip { font-size: 12px; padding: 1px 8px; border: 1px solid var(--soft); }
+
+  /* results */
+  .res { display: grid; grid-template-columns: 120px 1fr 56px; gap: 16px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--soft); }
+  .res:last-child { border-bottom: 1px solid var(--soft); }
+  .res .place { font-size: 30px; line-height: 1; color: var(--accent); }
+  .res h3 { font-size: 15px; font-weight: 600; }
+  .res p { color: var(--muted); font-size: 13.5px; }
+  .res time { font-size: 13px; text-align: right; color: var(--muted); }
+
+  /* history */
+  .row { display: grid; grid-template-columns: 170px 1fr; gap: 20px; padding: 16px 0; border-top: 1px solid var(--soft); }
+  .row:last-child { border-bottom: 1px solid var(--soft); }
+  .row time { font-size: 13px; color: var(--accent); padding-top: 3px; }
+  .row h3 { font-size: 16px; font-weight: 600; }
+  .row .where { color: var(--muted); font-size: 13px; }
+  .row p { margin-top: 4px; max-width: 640px; }
+
+  /* contact */
+  .contact { text-align: center; padding-bottom: 72px; }
+  .contact h2 { font-size: clamp(48px, 9vw, 84px); }
+  .contact p { color: var(--muted); max-width: 480px; margin: 10px auto 26px; }
+  .contact .cta { justify-content: center; }
+  footer { border-top: 1px solid var(--line); padding: 18px 0; font-size: 12px; color: var(--muted); text-align: center; }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s, transform .6s; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(2) { border-right: 0; }
+    .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    .cols { grid-template-columns: 1fr; }
+    .cols div { border-right: 0; border-bottom: 1px solid var(--soft); }
+    .cols div:last-child { border-bottom: 0; }
+    .row { grid-template-columns: 1fr; gap: 2px; }
+    .res { grid-template-columns: 84px 1fr; }
+    .res time { display: none; }
+    th { width: 110px; }
+    .links { gap: 14px; }
+    .links a.hide-sm { display: none; }
+    header { padding: 40px 0 28px; }
+    h2 { font-size: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .led { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo px" href="#top" id="logo"></a>
+    <div class="links">
+      <a href="#projects">Projects</a>
+      <a href="#results">Results</a>
+      <a href="#skills" class="hide-sm">Skills</a>
+      <a href="#contact" class="hide-sm">Contact</a>
+      <button id="theme" type="button" title="Switch colour theme">CRT</button>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="status"><span class="led"></span><span id="status"></span></div>
+        <h1 class="px" id="name"></h1>
+        <div class="role" id="role"></div>
+        <p class="pitch" id="pitch"></p>
+        <div class="cta">
+          <a class="btn primary" id="hire">Hire me</a>
+          <a class="btn" id="cv" hidden>Download CV</a>
+          <a class="btn" href="#projects">View projects</a>
+        </div>
+      </div>
+      <div class="scope" aria-hidden="true">
+        <div class="scope-bar"><span>CH1 1.00 V/div</span><span id="freq">1.00 kHz</span></div>
+        <canvas id="wave"></canvas>
+        <div class="scope-foot"><span>500 µs/div</span><span>TRIG'D ▲</span></div>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <svg class="trace" viewBox="0 0 980 22" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 11 H440 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l5 -8 H980" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+  </svg>
+
+  <section id="about" class="reveal">
+    <div class="head"><span class="num px">01</span><h2 class="px">About</h2></div>
+    <p class="lead" id="about-text"></p>
+    <table id="facts"></table>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="head"><span class="num px">02</span><h2 class="px">Projects</h2></div>
+    <div id="project-list"></div>
+  </section>
+
+  <section id="results" class="reveal">
+    <div class="head"><span class="num px">03</span><h2 class="px">Competitions &amp; talks</h2></div>
+    <div id="result-list"></div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="head"><span class="num px">04</span><h2 class="px">Skills</h2></div>
+    <table id="skill-table"></table>
+  </section>
+
+  <section id="history" class="reveal">
+    <div class="head"><span class="num px">05</span><h2 class="px">Experience &amp; education</h2></div>
+    <div id="rows"></div>
+  </section>
+
+  <svg class="trace" viewBox="0 0 980 22" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 11 H482 M482 2 V20 M498 2 V20 M498 11 H980" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+  </svg>
+
+  <section id="contact" class="contact reveal">
+    <div class="head" style="justify-content:center"><span class="num px">06</span></div>
+    <h2 class="px">Let's build something.</h2>
+    <p id="contact-text"></p>
+    <div class="cta" id="contact-links"></div>
+  </section>
+</main>
+
+<footer><div class="wrap" id="footer"></div></footer>
+
+<script>
+/* =====================================================================
+   EDIT THIS BLOCK. Everything on the page is generated from it.
+   ===================================================================== */
+const PROFILE = {
+  name: "Rati Gogichashvili",
+  status: "Open to internships and junior roles",
+  role: "Embedded Systems & Robotics Engineer",
+  pitch: "I design and build embedded hardware end to end: schematic, 4-layer PCB, STM32 firmware and real-time control.",
+  email: "rgogi2023@agruni.edu.ge",
+  cv: "Rati-Gogichashvili-CV.png", // the CV file next to this page. Swap for the PDF version when you have it.
+
+  stats: [
+    { value: "13/106", label: "Line Follower, RoboChallenge 2026, Bucharest" },
+    { value: "3× 1st", label: "First places in Georgian competitions, 2024–2026" },
+    { value: "3.54",   label: "GPA, BSc Electrical and Computer Engineering" },
+    { value: "Jülich", label: "Research internship offer, Forschungszentrum Jülich" },
+  ],
+
+  about: "Final-year Electrical and Computer Engineering student focused on embedded systems, PCB design and real-time control. Most of my learning happens outside the classroom, building robots that compete. I also repair RC vehicles professionally, so I am as comfortable debugging a board on the bench as designing one.",
+  facts: [
+    ["Location",    "Tbilisi, Georgia"],
+    ["Degree",      "BSc Electrical and Computer Engineering (Automated Control Systems), Agricultural University of Georgia, expected July 2027"],
+    ["Focus",       "Embedded systems · PCB design · Real-time control"],
+    ["Looking for", "Internships and junior roles in embedded systems, electronics or robotics"],
+  ],
+
+  projects: [
+    {
+      title: "High-speed line follower, V2",
+      meta: "Team Kavtazi · 2026",
+      summary: "Second-generation competition robot, designed and built from scratch in three months around an STM32G474.",
+      problem: "Build a robot fast enough to race internationally, after V1 earned a place on the Georgian national robotics team.",
+      work:    "Designed the 4-layer PCB in KiCad (fabricated at JLCPCB) and wrote the STM32 firmware. 16 reflective sensors are sampled through two ADCs with DMA at 5 kHz and feed a PID steering loop. Coreless drive motors, an impeller downforce system on a brushless motor and ESC, an on-board buck converter from a 3S LiPo, and a detachable OLED and 4-button board for track-side tuning.",
+      result:  "13th of 106 robots from 12 countries in Line Follower (5.606 s) and 17th of 63 in Line Follower Turbo (6.270 s) at RoboChallenge 2026 in Bucharest, Georgia's first appearance at the event.",
+      tools:   ["STM32G474", "KiCad", "C/C++", "ADC + DMA", "PID control", "Power electronics"],
+      image:   "",                 // a photo file next to this page, e.g. "v2.jpg". Leave "" for none.
+      link:    "",                 // schematic, GitHub repo, report or video. Leave "" for none.
+    },
+    {
+      title: "Line follower, V1",
+      meta: "Team Kavtazi · 2026",
+      summary: "First-generation robot on an STM32F103 that won the national championship.",
+      problem: "Build a competitive autonomous line follower from scratch for the Georgian Robotics Championship.",
+      work:    "PCB design, firmware and testing. 16 sensors read through a multiplexer, an H-bridge motor driver, PID control, and Bluetooth telemetry for live gain tuning. Wrote the logic for track transitions and line-polarity changes between black and white tracks.",
+      result:  "1st place at the Georgian national line-follower championship, and selection for the national team at RoboChallenge.",
+      tools:   ["STM32F103", "C/C++", "PID control", "Bluetooth telemetry"],
+      image:   "",
+      link:    "",
+    },
+    {
+      title: "Musty Flick, RC soccer robot",
+      meta: "University team project · 2025–2026",
+      summary: "Radio-controlled soccer robot built from scratch with a university team.",
+      problem: "Build an RC robot that can outplay other teams at the University RC Soccer Championship.",
+      work:    "Contributed to the design and build of the STM32-based robot: a metal chassis, omni wheels for maneuverability, and a rotating kicking mechanism added for the upgraded version.",
+      result:  "1st place in 2025, and 2nd place with the upgraded robot in 2026.",
+      tools:   ["STM32", "Omni wheels", "Mechanical design", "Teamwork"],
+      image:   "",
+      link:    "",
+    },
+    {
+      title: "Analog and logic course projects",
+      meta: "University coursework",
+      summary: "Two builds done without a microcontroller.",
+      problem: "Solve each task with analog and discrete logic design only.",
+      work:    "An analog VU meter built with operational amplifiers, and a sun-tracking solar panel controlled with logic ICs.",
+      result:  "Both graded A.",
+      tools:   ["Op-amps", "Logic ICs", "Proteus", "NI Multisim"],
+      image:   "",
+      link:    "",
+    },
+  ],
+
+  results: [
+    { place: "13th", title: "Line Follower, RoboChallenge Romania", note: "106 robots from 12 countries. Competed as part of the Georgian national robotics team.", year: "2026" },
+    { place: "17th", title: "Line Follower Turbo, RoboChallenge Romania", note: "63 robots. Same robot, no hardware changes, on a track with 3D loops and tunnels.", year: "2026" },
+    { place: "1st",  title: "Georgian national line-follower championship", note: "Qualified for the national team.", year: "2026" },
+    { place: "2nd",  title: "University RC Soccer Championship", note: "With the upgraded Musty Flick.", year: "2026" },
+    { place: "1st",  title: "University RC Soccer Championship", note: "Bendukidze Campus.", year: "2025" },
+    { place: "4th",  title: "National Sumobot Championship, 3 kg class", note: "Georgian Robotics Association.", year: "2025" },
+    { place: "1st",  title: "University RC Car Race", note: "Bendukidze Campus.", year: "2024" },
+    { place: "Talk", title: "Design and Implementation of Real-Time Control for Autonomous Line-Tracking Robots", note: "German-Georgian Science Bridge. Led to a research internship offer from Forschungszentrum Jülich.", year: "2026" },
+  ],
+
+  skills: [
+    ["Embedded",             ["C/C++", "STM32 (CubeIDE, HAL)", "ADC with DMA", "Timers and PWM", "I2C", "UART", "Bluetooth"]],
+    ["Hardware",             ["KiCad (multi-layer PCB design)", "SMD soldering", "Board bring-up and fault finding"]],
+    ["Control & simulation", ["PID tuning", "MATLAB/Simulink", "Proteus", "NI Multisim"]],
+    ["Mechanical CAD",       ["SolidWorks"]],
+    ["Languages",            ["Georgian (native)", "English (fluent)"]],
+  ],
+
+  history: [
+    { date: "2026", title: "Repair technician", where: "Minazona, Tbilisi",
+      text: "Diagnosed and repaired RC excavators and Traxxas RC cars, plus a ride-on electric excavator. Traced faults down to motors, gearboxes and control PCBs, and sourced replacement parts." },
+    { date: "Freelance", title: "PCB designer", where: "Independent clients",
+      text: "Designed custom PCBs for clients, from schematic to manufacturing files." },
+    { date: "Sep 2023 – Jul 2027 (exp.)", title: "BSc Electrical and Computer Engineering, Automated Control Systems", where: "Agricultural University of Georgia",
+      text: "GPA 3.54, 186 ECTS completed. Courses: Microprocessors I–II, Digital Control, Power Electronics, Signal Processing, Electromechanics, Programmable and Embedded Systems." },
+  ],
+
+  contactText: "Hiring for embedded systems, electronics or robotics? I'd be glad to hear from you.",
+  links: [
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/rati-gogichashvili/" },
+    { label: "GitHub",   url: "https://github.com/Kavtaz2702" },
+  ],
+};
+/* ===================== end of the part you edit ===================== */
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+const P = PROFILE;
+const ext = (a, url) => { a.href = url; if (/^https?:/.test(url)) { a.target = "_blank"; a.rel = "noopener"; } return a; };
+
+document.title = P.name + " | " + P.role;
+$("logo").textContent = "[" + P.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() + "]";
+$("status").textContent = P.status;
+$("name").textContent = P.name;
+$("role").textContent = P.role;
+$("pitch").textContent = P.pitch;
+$("hire").href = "mailto:" + P.email;
+if (P.cv) { $("cv").href = P.cv; $("cv").setAttribute("download", ""); $("cv").hidden = false; }
+$("about-text").textContent = P.about;
+$("contact-text").textContent = P.contactText;
+$("footer").textContent = "© " + new Date().getFullYear() + " " + P.name + " · " + P.role;
+
+P.stats.forEach(s => {
+  const box = el("div", "stat");
+  box.append(el("b", "px", s.value), el("span", "", s.label));
+  $("stats").append(box);
+});
+
+P.facts.forEach(([k, v]) => {
+  const tr = el("tr"); tr.append(el("th", "", k), el("td", "", v)); $("facts").append(tr);
+});
+
+P.projects.forEach((p, i) => {
+  const box = el("article", "proj");
+  const top = el("div", "proj-top");
+  top.append(el("span", "", "P-" + String(i + 1).padStart(3, "0") + (p.meta ? "  ·  " + p.meta.toUpperCase() : "")));
+  if (p.link) top.append(ext(el("a", "", "OPEN →"), p.link));
+  box.append(top);
+  if (p.image) { const img = el("img"); img.src = p.image; img.alt = p.title; img.loading = "lazy"; box.append(img); }
+  const body = el("div", "proj-body");
+  const cols = el("div", "cols");
+  [["Problem", p.problem], ["What I did", p.work], ["Result", p.result]].forEach(([k, v]) => {
+    const d = el("div"); d.append(el("b", "", k), document.createTextNode(v)); cols.append(d);
+  });
+  const chips = el("div", "chips");
+  p.tools.forEach(t => chips.append(el("span", "chip", t)));
+  body.append(el("h3", "px", p.title), el("p", "sum", p.summary), cols, chips);
+  box.append(body);
+  $("project-list").append(box);
+});
+
+P.results.forEach(r => {
+  const row = el("div", "res"), mid = el("div");
+  mid.append(el("h3", "", r.title), el("p", "", r.note));
+  row.append(el("div", "place px", r.place), mid, el("time", "", r.year));
+  $("result-list").append(row);
+});
+
+P.skills.forEach(([group, items]) => {
+  const tr = el("tr"); tr.append(el("th", "", group), el("td", "", items.join("  ·  "))); $("skill-table").append(tr);
+});
+
+P.history.forEach(h => {
+  const row = el("div", "row"), right = el("div");
+  right.append(el("h3", "", h.title), el("div", "where", h.where), el("p", "", h.text));
+  row.append(el("time", "", h.date), right);
+  $("rows").append(row);
+});
+
+$("contact-links").append(ext(el("a", "btn primary", "Email me"), "mailto:" + P.email));
+P.links.filter(l => l.url).forEach(l => $("contact-links").append(ext(el("a", "btn", l.label), l.url)));
+
+/* reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+}), { threshold: 0.05 });
+document.querySelectorAll(".reveal").forEach(s => io.observe(s));
+
+/* theme switch: paper <-> CRT */
+const root = document.documentElement, themeBtn = $("theme");
+function setTheme(t) {
+  if (t === "crt") root.dataset.theme = "crt"; else delete root.dataset.theme;
+  themeBtn.textContent = t === "crt" ? "PAPER" : "CRT";
+  try { localStorage.setItem("theme", t); } catch (e) {}
+  readColours();
+}
+themeBtn.addEventListener("click", () => setTheme(root.dataset.theme === "crt" ? "paper" : "crt"));
+
+/* oscilloscope: move the mouse over it to change the frequency */
+const cv = $("wave"), ctx = cv.getContext("2d");
+let col = {}, W = 0, H = 0, cycles = 3, target = 3, phase = 0;
+function readColours() {
+  const s = getComputedStyle(root);
+  col = { grid: s.getPropertyValue("--soft").trim(), wave: s.getPropertyValue("--accent").trim(), axis: s.getPropertyValue("--muted").trim() };
+}
+function resize() {
+  const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect();
+  W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+}
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineWidth = 1; ctx.strokeStyle = col.grid;
+  for (let i = 1; i < 10; i++) { const x = W * i / 10; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let i = 1; i < 6; i++)  { const y = H * i / 6;  ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  ctx.strokeStyle = col.axis; ctx.setLineDash([3, 4]);
+  ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke(); ctx.setLineDash([]);
+
+  cycles += (target - cycles) * 0.08;
+  ctx.strokeStyle = col.wave; ctx.lineWidth = 2; ctx.beginPath();
+  for (let x = 0; x <= W; x += 2) {
+    const t = x / W * cycles * Math.PI * 2 + phase;
+    const y = H / 2 - (Math.sin(t) + 0.22 * Math.sin(3 * t)) * H * 0.27;
+    x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  $("freq").textContent = (cycles / 3).toFixed(2) + " kHz";
+}
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function loop() { phase -= 0.04; draw(); if (!still) requestAnimationFrame(loop); }
+cv.addEventListener("mousemove", e => { const r = cv.getBoundingClientRect(); target = 1 + (e.clientX - r.left) / r.width * 7; });
+cv.addEventListener("mouseleave", () => target = 3);
+addEventListener("resize", () => { resize(); if (still) draw(); });
+
+let saved = "paper";
+try { saved = localStorage.getItem("theme") || "paper"; } catch (e) {}
+setTheme(saved); resize(); loop();
+</script>
+</body>
+</html>
